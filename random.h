@@ -24,8 +24,17 @@ namespace Random {
 	thread_local inline std::mt19937 mt{ generate() }; // generates a seeded std::mt19937 and copies it into our global object
 
 	// Generate a random double between [min, max] (inclusive)
-	inline double get(double min, double max) {
+	inline double uniform_double(double min, double max) {
 		return std::uniform_real_distribution<double>{min, max}(mt);
+	}
+
+    // Generate a random complex X + iY with X,Y ~ N(mean, stddev)
+	inline std::complex<double> gaussian_complex(double mean, double stddev) {
+		thread_local std::normal_distribution<double> dist{mean, stddev};
+	    double x = dist(mt);
+	    double y = dist(mt);
+
+	    return {x,y};
 	}
 }
 

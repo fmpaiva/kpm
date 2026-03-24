@@ -11,7 +11,16 @@ class KPM {
 public:
     explicit KPM(const Hamiltonian&);
     void KPM_iteration();
-    void fill_random_vector();
+    static Eigen::Array<double, -1, 1> gaussian_chebyshev_moments(double mu, double sigma, long N);
+
+    template <typename Sampler>
+    void fill_random_vector(const Sampler& sampler) {
+        for (Index i = 0; i < h_.dimension(); ++i) {
+            v_(i, 0) = sampler();
+        }
+
+        index_ = 0;
+    }
 
     [[nodiscard]] constexpr auto vector() const {
         return v_.col(index_ % 2);
