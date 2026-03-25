@@ -12,6 +12,7 @@ public:
     [[nodiscard]] Eigen::VectorXcd act_on(const Eigen::Ref<const Eigen::VectorXcd>&) const;
 
 private:
+    double scale_;
     long int D_;
     int Lx_;
     int Ly_;

@@ -26,8 +26,8 @@ int main() {
     int Lx = 256;
     int Ly = 256;
     int nu = 21;
-    double E1 = 0.65 / 5;
-    double E2 = 1. / 5;
+    double E1 = 0.65;
+    double E2 = 1.;
     const Hamiltonian hamiltonian{Lx, Ly, nu, true, false, true};
     std::filesystem::path output_path1{"../data/dos-" + std::to_string(Lx) + "x" + std::to_string(Ly)
         + "-" + std::to_string(nu) + "_L-yopen.txt"};
