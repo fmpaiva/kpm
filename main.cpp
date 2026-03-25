@@ -1,6 +1,7 @@
 #include <chrono> // for std::chrono functions
 #include <filesystem>
 #include <iostream>
+#include "simulation.h"
 
 class Timer {
 private:
@@ -20,8 +21,6 @@ public:
 	}
 };
 
-#include "simulation.h"
-
 int main() {
     int Lx = 256;
     int Ly = 256;
@@ -38,8 +37,18 @@ int main() {
 
     Timer t;
     Simulation::dos(hamiltonian, static_cast<long int>(std::pow(2, 14)), output_path1);
-    Simulation::ldos(hamiltonian, E1, 0.003, static_cast<long>(std::pow(2, 12)), output_path2);
-    Simulation::ldos(hamiltonian, E2, 0.003, static_cast<long>(std::pow(2, 12)), output_path3);
+    Simulation::ldos(hamiltonian, E1, 0.009, static_cast<long>(std::pow(2, 9)), output_path2);
+    Simulation::ldos(hamiltonian, E2, 0.009, static_cast<long>(std::pow(2, 9)), output_path3);
 
     std::cout << "Time elapsed: " << t.elapsed() << " seconds\n";
 }
+
+// Ver campos magnéticos mais fracos para aproximar resultados do contínuos
+// Ver como isto evolui com o número de polinómios. Reduzir sigma e ir aumentando número de polinómios.
+// Variação média quadrática do potencial no espaço todo da ideia da desordem.
+// Ver variância on the fly. Temos de controlar as incertezas numéricas!
+// Outra incerteza tem a ver com a resolução
+// Ver para cada sigma que aquilo converge com o número de polinómios. Depois temos de variar os sigmas
+// Ver se somar LDOS dá DOS
+// Podemos também calcular com o cálculo não estocástico
+// Função espectral: Elemento de matriz do delta no espaço dos k

@@ -7,7 +7,8 @@ class Hamiltonian {
 public:
     Hamiltonian(int Lx, int Ly, int nu, bool x_periodic, bool y_periodic, bool disorder);
 
-    [[nodiscard]] constexpr auto dimension() const { return D_;}
+    [[nodiscard]] constexpr auto dimension() const { return D_; }
+    [[nodiscard]] constexpr auto scale() const { return scale_; }
 
     [[nodiscard]] Eigen::VectorXcd act_on(const Eigen::Ref<const Eigen::VectorXcd>&) const;
 

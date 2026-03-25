@@ -62,7 +62,7 @@ void Simulation::ldos(const Hamiltonian& h, double E, double sigma, long int N_p
     KPM kpm(h);
     Eigen::Array<double, -1, 1> gaussian_moments =
         std::pow(2.0, 0.75) * std::pow(M_PI, 0.25) * std::sqrt(sigma) *
-        KPM::gaussian_chebyshev_moments(E, std::sqrt(2) * sigma, N_pol);
+        KPM::gaussian_chebyshev_moments(E * h.scale(), std::sqrt(2) * sigma, N_pol);
     Eigen::Array<double, -1, 1> ldos(h.dimension());
     ldos.setZero();
 
