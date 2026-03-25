@@ -1,20 +1,28 @@
 #include "hamiltonian.h"
 #include <complex>
 
+#include "random.h"
+
 using Eigen::Index;
 using namespace std::complex_literals;
 
-Hamiltonian::Hamiltonian(int Lx, int Ly, int nu, bool x_periodic, bool y_periodic)
+Hamiltonian::Hamiltonian(int Lx, int Ly, int nu, bool x_periodic, bool y_periodic, bool disorder)
     : D_{Lx * Ly}
     , Lx_{Lx}
     , Ly_{Ly}
-    , tx_{std::complex(0.25, 0.0)}
-    , ty_{std::complex(0.25, 0.0)}
+    , tx_{std::complex(0.2, 0.0)}
+    , ty_{std::complex(0.2, 0.0)}
     , flux_{static_cast<double>(nu) / Lx_}
     , x_periodic_{x_periodic}
     , y_periodic_{y_periodic}
+    , disorder_(disorder)
+    , arr_disorder_(D_)
 {
-
+    if (disorder_) {
+        for (Index i = 0; i < D_; ++i) {
+            arr_disorder_(i) = Random::uniform_double(-0.1, 0.1);
+        }
+    }
 }
 
 [[nodiscard]] Eigen::VectorXcd Hamiltonian::act_on(const Eigen::Ref<const Eigen::VectorXcd>& psi) const {
@@ -54,6 +62,12 @@ Hamiltonian::Hamiltonian(int Lx, int Ly, int nu, bool x_periodic, bool y_periodi
             } else if (y_periodic_) {
                 out(i) += -ty_ * psi(x + Lx_ * (Ly_ - 1));
             }
+        }
+    }
+
+    if (disorder_) {
+        for (Index i = 0; i < D_; ++i) {
+            out(i) += arr_disorder_(i) * psi(i);
         }
     }
 

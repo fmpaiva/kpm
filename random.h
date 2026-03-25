@@ -28,6 +28,11 @@ namespace Random {
 		return std::uniform_real_distribution<double>{min, max}(mt);
 	}
 
+    // Generate a random double X ~ N(mean, stddev)
+	inline double gaussian_double(double mean, double stddev) {
+	    return std::normal_distribution<double>{mean, stddev}(mt);
+	}
+
     // Generate a random complex X + iY with X,Y ~ N(mean, stddev)
 	inline std::complex<double> gaussian_complex(double mean, double stddev) {
 		thread_local std::normal_distribution<double> dist{mean, stddev};

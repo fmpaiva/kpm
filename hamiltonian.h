@@ -5,7 +5,7 @@
 
 class Hamiltonian {
 public:
-    Hamiltonian(int Lx, int Ly, int nu, bool x_periodic, bool y_periodic);
+    Hamiltonian(int Lx, int Ly, int nu, bool x_periodic, bool y_periodic, bool disorder);
 
     [[nodiscard]] constexpr auto dimension() const { return D_;}
 
@@ -20,8 +20,8 @@ private:
     double flux_;
     bool x_periodic_;
     bool y_periodic_;
-    Eigen::VectorXcd bc_x_;
-    Eigen::VectorXcd bc_y_;
+    bool disorder_;
+    Eigen::VectorXcd arr_disorder_;
 };
 
 #endif
