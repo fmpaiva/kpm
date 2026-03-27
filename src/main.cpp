@@ -35,6 +35,8 @@ int main() {
 }
 
 // Verificar que momentso gaussianos estão bem
+// Ver output do henrique
+// Meter constantes configuráveis num ficheiro para trocar facilmente
 
 // Ver campos magnéticos mais fracos para aproximar resultados do contínuos
 // Ver como isto evolui com o número de polinómios. Reduzir sigma e ir aumentando número de polinómios.
