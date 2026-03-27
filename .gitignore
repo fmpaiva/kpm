@@ -67,4 +67,4 @@ build/
 cmake-build-*/
 
 # IDE files
-.idea/make-*/
+.idea/*
