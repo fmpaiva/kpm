@@ -44,7 +44,8 @@ void KPM::accumulate(long N_pol, const Eigen::ArrayXd& moments, Eigen::ArrayXcd&
     }
 }
 
-Eigen::ArrayXd KPM::gaussian_chebyshev_moments(double mu, double sigma, long N) {
+Eigen::ArrayXd KPM::gaussian_chebyshev_moments(double mu, double sigma) {
+    auto N = static_cast<long>(6.0 / sigma);
     Eigen::ArrayXd moments(N);
 
     for (Index n = 0; n < N; ++n) {
@@ -73,8 +74,12 @@ Eigen::ArrayXd KPM::gaussian_chebyshev_moments(double mu, double sigma, long N) 
             std::exp(-n2 * sigma * sigma / (2.0 * one_minus_mu2)) / sqrt_term;
 
         const double theta = std::acos(mu);
+        auto coeff = prefactor * (a0 * std::cos(nn * theta) + a1 * std::sin(nn * theta));
 
-        moments(n) = prefactor * (a0 * std::cos(nn * theta) + a1 * std::sin(nn * theta));
+        if (n == 0)
+            moments(n) = coeff / M_PI;
+        else
+            moments(n) = 2.0 * coeff / M_PI;
     }
 
     return moments;

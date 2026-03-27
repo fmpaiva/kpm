@@ -1,6 +1,9 @@
 #include <chrono> // for std::chrono functions
 #include <filesystem>
 #include <iostream>
+#include <fstream>
+
+#include "kpm.h"
 #include "simulation.h"
 
 class Timer {
@@ -22,19 +25,32 @@ public:
 };
 
 int main() {
-    int Lx = 1024;
-    int Ly = 1024;
+    int Lx = 256;
+    int Ly = 256;
     int nu = 1;
     const Hamiltonian hamiltonian{Lx, Ly, nu, true, true, false};
-    std::filesystem::path output_path1{"../data/dos-" + std::to_string(Lx) + "x" + std::to_string(Ly)
-        + "-" + std::to_string(nu) + "_L-yopen.txt"};
+    // std::filesystem::path output_path1{"../data/dos-" + std::to_string(Lx) + "x" + std::to_string(Ly)
+    // + "-" + std::to_string(nu) + "_L-yopen.txt"};
+
+    std::filesystem::path output_path1{"../data/moments.dat"};
 
     Timer t;
-    Simulation::dos(hamiltonian, static_cast<long int>(std::pow(2, 18)), output_path1);
+    double sigma = 0.0001;
+
+    Eigen::ArrayXd moments = KPM::gaussian_chebyshev_moments(0.8, sigma);
     std::cout << "Time elapsed: " << t.elapsed() << " seconds\n";
+
+    std::ofstream file{output_path1};
+    if (!file)
+        throw std::runtime_error("Could not open " + output_path1.string() + ".\n");
+
+    file << "moments\n";
+    for (Index i = 0; i < N_pol; ++i) {
+        file << moments(i) << "\n";
+    }
 }
 
-// Verificar que momentso gaussianos estão bem
+// Fazer estudo da convergência da aproximação à gaussiana para termos fórmula empírica fiável
 // Ver output do henrique
 // Meter constantes configuráveis num ficheiro para trocar facilmente
 

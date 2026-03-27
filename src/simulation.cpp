@@ -53,25 +53,23 @@ void Simulation::dos(const Hamiltonian& h, long int N_pol, const std::filesystem
 
 // TODO: Document in notes and comments
 // TODO: Ver cálculo dos momentos e número de polinómios, código henrique
-void Simulation::ldos(const Hamiltonian& h, double E, double sigma, long int N_pol, const std::filesystem::path& path) {
-    if (N_pol % 2 != 0)
-        throw std::invalid_argument("N_pol must be even");
-
+void Simulation::ldos(const Hamiltonian& h, double E, double sigma, const std::filesystem::path& path) {
     KPM kpm(h);
-    Eigen::ArrayXd gaussian_moments =
-        std::pow(2.0, 0.75) * std::pow(M_PI, 0.25) * std::sqrt(sigma * h.scale()) *
-        KPM::gaussian_chebyshev_moments(E * h.scale(), std::sqrt(2) * sigma * h.scale(), N_pol);
     Eigen::ArrayXd ldos(h.dimension());
     Eigen::ArrayXd var(h.dimension());
     ldos.setZero();
     var.setZero();
+
+    Eigen::ArrayXd gaussian_moments =
+        std::pow(2.0, 0.75) * std::pow(M_PI, 0.25) * std::sqrt(sigma * h.scale()) *
+        KPM::gaussian_chebyshev_moments(E * h.scale(), std::sqrt(2) * sigma * h.scale());
 
     Eigen::ArrayXcd running_map(h.dimension());
     for (Index i = 0; i < Constants::N_samples_LDOS; ++i) { // TODO: Parallelize
         kpm.fill_random_cplx_gaussian();
         Eigen::ArrayXcd starting_random_vector(kpm.vector());
         running_map.setZero();
-        kpm.accumulate(N_pol, gaussian_moments, running_map);
+        kpm.accumulate(gaussian_moments.size(), gaussian_moments, running_map);
 
         running_map *= starting_random_vector.conjugate();
         Eigen::ArrayXd running_ldos = running_map.cwiseAbs2();

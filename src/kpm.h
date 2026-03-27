@@ -20,7 +20,7 @@ public:
         return v_.col((index_ + 1) % 2);
     }
 
-    static Eigen::ArrayXd gaussian_chebyshev_moments(double mu, double sigma, long N);
+    static Eigen::ArrayXd gaussian_chebyshev_moments(double mu, double sigma);
 
 private:
     const Hamiltonian& h_;
