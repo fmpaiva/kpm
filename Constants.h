@@ -2,8 +2,8 @@
 #define CONSTANTS_H
 
 namespace Constants {
-    inline constexpr long int N_samples{8};
-    inline constexpr int N_threads{4};
+    inline constexpr long N_samples_DOS{1};
+    inline constexpr long N_samples_LDOS{64};
 }
 
 #endif //CONSTANTS_H

@@ -19,13 +19,11 @@ void Simulation::dos(const Hamiltonian& h, long int N_pol, const std::filesystem
         throw std::invalid_argument("N_pol must be even");
 
     KPM kpm(h);
-    Eigen::Array<double, -1, 1> moments(N_pol, 1);
+    Eigen::ArrayXd moments(N_pol, 1);
     moments.setZero();
 
-    for (Index i = 0; i < Constants::N_samples; ++i) {
-        kpm.fill_random_vector([&]() -> std::complex<double> {
-            return std::exp(1i * Random::uniform_double(0,2 * M_PI));
-        });
+    for (Index i = 0; i < Constants::N_samples_DOS; ++i) {
+        kpm.fill_random_phase();
 
         double current_moment_0  = kpm.vector().squaredNorm();
         moments(0) += current_moment_0;
@@ -41,7 +39,7 @@ void Simulation::dos(const Hamiltonian& h, long int N_pol, const std::filesystem
             moments(2 * n + 1) += 2 * kpm.vector().dot(kpm.prev_vector()).real() - current_moment_1;
         }
     }
-    moments /= Constants::N_samples * static_cast<double>(h.dimension());
+    moments /= Constants::N_samples_LDOS * static_cast<double>(h.dimension());
 
     std::ofstream file{path};
     if (!file)
@@ -53,44 +51,46 @@ void Simulation::dos(const Hamiltonian& h, long int N_pol, const std::filesystem
     }
 }
 
-// TODO: Calculate variance on the fly
 // TODO: Document in notes and comments
+// TODO: Ver cálculo dos momentos e número de polinómios, código henrique
 void Simulation::ldos(const Hamiltonian& h, double E, double sigma, long int N_pol, const std::filesystem::path& path) {
     if (N_pol % 2 != 0)
         throw std::invalid_argument("N_pol must be even");
 
     KPM kpm(h);
-    Eigen::Array<double, -1, 1> gaussian_moments =
-        std::pow(2.0, 0.75) * std::pow(M_PI, 0.25) * std::sqrt(sigma) *
-        KPM::gaussian_chebyshev_moments(E * h.scale(), std::sqrt(2) * sigma, N_pol);
-    Eigen::Array<double, -1, 1> ldos(h.dimension());
+    Eigen::ArrayXd gaussian_moments =
+        std::pow(2.0, 0.75) * std::pow(M_PI, 0.25) * std::sqrt(sigma * h.scale()) *
+        KPM::gaussian_chebyshev_moments(E * h.scale(), std::sqrt(2) * sigma * h.scale(), N_pol);
+    Eigen::ArrayXd ldos(h.dimension());
+    Eigen::ArrayXd var(h.dimension());
     ldos.setZero();
+    var.setZero();
 
-    Eigen::Array<std::complex<double>, -1, 1> running_map(h.dimension());
-    for (Index i = 0; i < Constants::N_samples; ++i) {
+    Eigen::ArrayXcd running_map(h.dimension());
+    for (Index i = 0; i < Constants::N_samples_LDOS; ++i) { // TODO: Parallelize
+        kpm.fill_random_cplx_gaussian();
+        Eigen::ArrayXcd starting_random_vector(kpm.vector());
         running_map.setZero();
-
-        kpm.fill_random_vector([&]() -> std::complex<double> {
-            return Random::gaussian_complex(0, 1) / std::sqrt(2.0);
-        });
-        Eigen::Array<std::complex<double>, -1, 1> starting_random_vector(kpm.vector());
-
-        for (Index n = 0; n < N_pol; ++n) {
-            running_map += gaussian_moments(n) * kpm.vector().array();
-            kpm.KPM_iteration();
-        }
+        kpm.accumulate(N_pol, gaussian_moments, running_map);
 
         running_map *= starting_random_vector.conjugate();
-        ldos += running_map.cwiseAbs2();
+        Eigen::ArrayXd running_ldos = running_map.cwiseAbs2();
+
+        auto N = static_cast<double>(i);
+        const Eigen::ArrayXd mean = i == 0 ? ldos : ldos / N;
+        var = (var + (mean - running_ldos).square() / (N + 1)) *  N / (N + 1);
+
+        ldos += running_ldos;
     }
-    ldos /= Constants::N_samples;
+    ldos /= Constants::N_samples_LDOS;
+    var /= Constants::N_samples_LDOS;
 
     std::ofstream file{path};
     if (!file)
         throw std::runtime_error("Could not open " + path.string() + ".\n");
 
-    file << "ldos\n";
+    file << "ldos,variance,rel_err\n";
     for (Index i = 0; i < h.dimension(); ++i) {
-        file << ldos(i) << "\n";
+        file << ldos(i) << "," << var(i) << "," << std::sqrt(var(i)) / ldos(i) << "\n";
     }
 }

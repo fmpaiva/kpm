@@ -24,10 +24,10 @@ public:
 int main() {
     int Lx = 256;
     int Ly = 256;
-    int nu = 21;
+    int nu = 3;
     double E1 = 0.65;
     double E2 = 1.;
-    const Hamiltonian hamiltonian{Lx, Ly, nu, true, false, true};
+    const Hamiltonian hamiltonian{Lx, Ly, nu, true, false, false};
     std::filesystem::path output_path1{"../data/dos-" + std::to_string(Lx) + "x" + std::to_string(Ly)
         + "-" + std::to_string(nu) + "_L-yopen.txt"};
     std::filesystem::path output_path2{"../data/ldos-" + std::to_string(E1) + "-" + std::to_string(Lx)
@@ -37,11 +37,13 @@ int main() {
 
     Timer t;
     Simulation::dos(hamiltonian, static_cast<long int>(std::pow(2, 14)), output_path1);
-    Simulation::ldos(hamiltonian, E1, 0.009, static_cast<long>(std::pow(2, 9)), output_path2);
-    Simulation::ldos(hamiltonian, E2, 0.009, static_cast<long>(std::pow(2, 9)), output_path3);
+    // Simulation::ldos(hamiltonian, E1, 0.0001, static_cast<long>(std::pow(2, 13)), output_path2);
+    // Simulation::ldos(hamiltonian, E2, 0.0001, static_cast<long>(std::pow(2, 13)), output_path3);
 
     std::cout << "Time elapsed: " << t.elapsed() << " seconds\n";
 }
+
+// Verificar que momentso gaussianos estão bem
 
 // Ver campos magnéticos mais fracos para aproximar resultados do contínuos
 // Ver como isto evolui com o número de polinómios. Reduzir sigma e ir aumentando número de polinómios.

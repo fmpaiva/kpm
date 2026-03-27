@@ -21,8 +21,31 @@ void KPM::KPM_iteration() {
     ++index_;
 }
 
-Eigen::Array<double, -1, 1> KPM::gaussian_chebyshev_moments(double mu, double sigma, long N) {
-    Eigen::Array<double, -1, 1> moments(N);
+void KPM::fill_random_phase() {
+    for (Index i = 0; i < h_.dimension(); ++i) {
+        v_(i, 0) = std::exp(1i * Random::uniform_double(0,2 * M_PI));
+    }
+
+    index_ = 0;
+}
+
+void KPM::fill_random_cplx_gaussian() {
+    for (Index i = 0; i < h_.dimension(); ++i) {
+        v_(i, 0) = Random::gaussian_complex(0, 1) / std::sqrt(2.0);
+    }
+
+    index_ = 0;
+}
+
+void KPM::accumulate(long N_pol, const Eigen::ArrayXd& moments, Eigen::ArrayXcd& out) {
+    for (Index n = 0; n < N_pol; ++n) {
+        out += moments(n) * this->vector().array();
+        this->KPM_iteration();
+    }
+}
+
+Eigen::ArrayXd KPM::gaussian_chebyshev_moments(double mu, double sigma, long N) {
+    Eigen::ArrayXd moments(N);
 
     for (Index n = 0; n < N; ++n) {
         const double one_minus_mu2 = 1.0 - mu * mu;

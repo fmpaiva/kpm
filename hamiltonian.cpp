@@ -23,6 +23,8 @@ Hamiltonian::Hamiltonian(int Lx, int Ly, int nu, bool x_periodic, bool y_periodi
         for (Index i = 0; i < D_; ++i) {
             arr_disorder_(i) = Random::uniform_double(-0.3, 0.3) * scale_;
         }
+    } else {
+        arr_disorder_.setZero();
     }
 }
 
@@ -66,6 +68,7 @@ Hamiltonian::Hamiltonian(int Lx, int Ly, int nu, bool x_periodic, bool y_periodi
         }
     }
 
+    // Meter desordem 0
     if (disorder_) {
         for (Index i = 0; i < D_; ++i) {
             out(i) += arr_disorder_(i) * psi(i);

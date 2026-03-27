@@ -15,4 +15,5 @@ add_executable(kpm
         simulation.cpp
         simulation.h
         Constants.h
-        hamiltonian.cpp)
+        hamiltonian.cpp
+)
