@@ -33,23 +33,23 @@ Hamiltonian::Hamiltonian(int Lx, int Ly, int nu, bool x_periodic, bool y_periodi
     out.setZero();
 
     for (Index y = 0; y < Ly_; ++y) {
-        const std::complex exp{std::exp(2i * M_PI * flux_ * static_cast<double>(y))};
+        const std::complex phase{std::exp(2i * M_PI * flux_ * static_cast<double>(y))};
 
         for (Index x = 0; x < Lx_; ++x) {
             const Index i = x + Lx_ * y;
 
             // +x neighbor
             if (x + 1 < Lx_) {
-                out(i) += -tx_ * exp * psi((x + 1) + Lx_ * y);
+                out(i) += -tx_ * phase * psi((x + 1) + Lx_ * y);
             } else if (x_periodic_) {
-                out(i) += -tx_ * exp * psi(Lx_ * y);  // x=0
+                out(i) += -tx_ * phase * psi(Lx_ * y);  // x=0
             }
 
             // -x neighbor
             if (x > 0) {
-                out(i) += -tx_ * std::conj(exp) * psi((x - 1) + Lx_ * y);
+                out(i) += -tx_ * std::conj(phase) * psi((x - 1) + Lx_ * y);
             } else if (x_periodic_) {
-                out(i) += -tx_ * std::conj(exp) * psi((Lx_ - 1) + Lx_ * y);
+                out(i) += -tx_ * std::conj(phase) * psi((Lx_ - 1) + Lx_ * y);
             }
 
             // +y neighbor
