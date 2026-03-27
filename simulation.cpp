@@ -39,7 +39,7 @@ void Simulation::dos(const Hamiltonian& h, long int N_pol, const std::filesystem
             moments(2 * n + 1) += 2 * kpm.vector().dot(kpm.prev_vector()).real() - current_moment_1;
         }
     }
-    moments /= Constants::N_samples_LDOS * static_cast<double>(h.dimension());
+    moments /= Constants::N_samples_DOS * static_cast<double>(h.dimension());
 
     std::ofstream file{path};
     if (!file)
