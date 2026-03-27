@@ -28,26 +28,16 @@ int main() {
     int Lx = 256;
     int Ly = 256;
     int nu = 1;
-    const Hamiltonian hamiltonian{Lx, Ly, nu, true, true, false};
-    // std::filesystem::path output_path1{"../data/dos-" + std::to_string(Lx) + "x" + std::to_string(Ly)
-    // + "-" + std::to_string(nu) + "_L-yopen.txt"};
-
-    std::filesystem::path output_path1{"../data/moments.dat"};
+    bool y_periodic = true;
+    bool disorder = false;
+    const Hamiltonian hamiltonian{Lx, Ly, nu, true, y_periodic, disorder};
+    std::filesystem::path path{"../data/dos-" + std::to_string(Lx) + "x" + std::to_string(Ly)
+        + "-" + std::to_string(nu) + "_L-y_periodic" + std::to_string(y_periodic) + "-disorder"
+        + std::to_string(disorder) + ".dat"};
 
     Timer t;
-    double sigma = 0.0001;
-
-    Eigen::ArrayXd moments = KPM::gaussian_chebyshev_moments(0.8, sigma);
+    Simulation::dos(hamiltonian, static_cast<long>(std::pow(2, 14)), path);
     std::cout << "Time elapsed: " << t.elapsed() << " seconds\n";
-
-    std::ofstream file{output_path1};
-    if (!file)
-        throw std::runtime_error("Could not open " + output_path1.string() + ".\n");
-
-    file << "moments\n";
-    for (Index i = 0; i < N_pol; ++i) {
-        file << moments(i) << "\n";
-    }
 }
 
 // Fazer estudo da convergência da aproximação à gaussiana para termos fórmula empírica fiável
