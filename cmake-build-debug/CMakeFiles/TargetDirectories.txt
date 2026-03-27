@@ -1,3 +1,0 @@
-/home/francisco/Física/Gulbenkian/kpm/cmake-build-debug/CMakeFiles/kpm.dir
-/home/francisco/Física/Gulbenkian/kpm/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/francisco/Física/Gulbenkian/kpm/cmake-build-debug/CMakeFiles/rebuild_cache.dir
