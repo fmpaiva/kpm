@@ -13,10 +13,10 @@ public:
     void fill_random_cplx_gaussian();
     void accumulate(long N_pol, const Eigen::ArrayXd& moments, Eigen::ArrayXcd& out);
 
-    [[nodiscard]] constexpr auto vector() const {
+    [[nodiscard]] auto vector() const {
         return v_.col(index_ % 2);
     }
-    [[nodiscard]] constexpr auto prev_vector() const {
+    [[nodiscard]] auto prev_vector() const {
         return v_.col((index_ + 1) % 2);
     }
 
