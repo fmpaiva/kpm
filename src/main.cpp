@@ -1,32 +1,30 @@
 #include <chrono> // for std::chrono functions
 #include <filesystem>
 #include <iostream>
-#include <fstream>
 
-#include "kpm.h"
 #include "simulation.h"
 
 class Timer {
 private:
-	// Type aliases to make accessing nested type easier
-	using Clock = std::chrono::steady_clock;
-	using Second = std::chrono::duration<double, std::ratio<1>>;
+    // Type aliases to make accessing nested type easier
+    using Clock = std::chrono::steady_clock;
+    using Second = std::chrono::duration<double, std::ratio<1>>;
 
-	std::chrono::time_point<Clock> m_beg { Clock::now() };
+    std::chrono::time_point<Clock> m_beg { Clock::now() };
 
 public:
-	void reset() {
-		m_beg = Clock::now();
-	}
+    void reset() {
+        m_beg = Clock::now();
+    }
 
-	[[nodiscard]] double elapsed() const {
-		return std::chrono::duration_cast<Second>(Clock::now() - m_beg).count();
-	}
+    [[nodiscard]] double elapsed() const {
+        return std::chrono::duration_cast<Second>(Clock::now() - m_beg).count();
+    }
 };
 
 int main() {
-    int Lx = 256;
-    int Ly = 256;
+    int Lx = 512;
+    int Ly = 512;
     int nu = 1;
     bool y_periodic = true;
     bool disorder = false;

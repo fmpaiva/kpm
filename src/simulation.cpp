@@ -1,12 +1,7 @@
-#include <complex>
 #include <iostream>
-
-#include "hamiltonian.h"
-#include "random.h"
-#include "simulation.h"
-
 #include <fstream>
-
+#include "hamiltonian.h"
+#include "simulation.h"
 #include "Constants.h"
 #include "kpm.h"
 #include "Eigen/Dense"
