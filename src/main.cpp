@@ -1,8 +1,9 @@
 #include <chrono> // for std::chrono functions
 #include <filesystem>
 #include <iostream>
-
+#include <fstream>
 #include "simulation.h"
+#include "kpm.h"
 
 class Timer {
 private:
@@ -36,6 +37,22 @@ int main() {
     Timer t;
     Simulation::dos(hamiltonian, static_cast<long>(std::pow(2, 14)), path);
     std::cout << "Time elapsed: " << t.elapsed() << " seconds\n";
+
+    // Timer t;
+    // auto moments = KPM::gaussian_chebyshev_moments(0, 0.000001);
+    // std::cout << "Time elapsed: " << t.elapsed() << " seconds\n";
+    //
+    // std::filesystem::path path{"data/moments.dat"};
+    // std::ofstream file{path};
+    //
+    // if (!file) {
+    //     std::cout << "Error opening file\n";
+    //     exit(1);
+    // }
+    //
+    // for (long i = 0; i < moments.size(); ++i) {
+    //     file << moments(i) << "\n";
+    // }
 }
 
 // Fazer estudo da convergência da aproximação à gaussiana para termos fórmula empírica fiável
