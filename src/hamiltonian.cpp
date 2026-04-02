@@ -7,7 +7,7 @@ using Eigen::Index;
 using namespace std::complex_literals;
 
 Hamiltonian::Hamiltonian(int Lx, int Ly, int nu, bool x_periodic, bool y_periodic, bool disorder)
-    : scale_{0.23}
+    : scale_{0.227272727273}
     , D_{Lx * Ly}
     , Lx_{Lx}
     , Ly_{Ly}
@@ -21,7 +21,7 @@ Hamiltonian::Hamiltonian(int Lx, int Ly, int nu, bool x_periodic, bool y_periodi
 {
     if (disorder_) {
         for (Index i = 0; i < D_; ++i) {
-            arr_disorder_(i) = Random::uniform_double(-0.3, 0.3) * scale_;
+            arr_disorder_(i) = Random::uniform_double(-0.6928, 0.6928) * scale_;
         }
     } else {
         arr_disorder_.setZero();

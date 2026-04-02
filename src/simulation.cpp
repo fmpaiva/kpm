@@ -47,7 +47,6 @@ void Simulation::dos(const Hamiltonian& h, long int N_pol, const std::filesystem
 }
 
 // TODO: Document in notes and comments
-// TODO: Ver cálculo dos momentos e número de polinómios, código henrique
 void Simulation::ldos(const Hamiltonian& h, double E, double sigma, const std::filesystem::path& path) {
     KPM kpm(h);
     Eigen::ArrayXd ldos(h.dimension());
@@ -86,4 +85,12 @@ void Simulation::ldos(const Hamiltonian& h, double E, double sigma, const std::f
     for (Index i = 0; i < h.dimension(); ++i) {
         file << ldos(i) << "," << var(i) << "," << std::sqrt(var(i)) / ldos(i) << "\n";
     }
+}
+
+void Simulation::time_evolve(const Hamiltonian& h, 
+                             const Eigen::ArrayXcd& wavepacket, 
+                             double t, 
+                             const std::filesystem::path& path
+) {
+
 }

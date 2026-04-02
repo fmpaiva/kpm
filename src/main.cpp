@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <iostream>
 #include <fstream>
+#include "Constants.h"
 #include "simulation.h"
 #include "kpm.h"
 
@@ -24,18 +25,19 @@ public:
 };
 
 int main() {
-    int Lx = 512;
-    int Ly = 512;
-    int nu = 1;
-    bool y_periodic = true;
-    bool disorder = false;
+    int Lx = 256;
+    int Ly = 256;
+    int nu = 8;
+    bool y_periodic = false;
+    bool disorder = true;
     const Hamiltonian hamiltonian{Lx, Ly, nu, true, y_periodic, disorder};
-    std::filesystem::path path{"../data/dos-" + std::to_string(Lx) + "x" + std::to_string(Ly)
+    std::filesystem::path path{"data/ldos-" + std::to_string(Lx) + "x" + std::to_string(Ly)
         + "-" + std::to_string(nu) + "_L-y_periodic" + std::to_string(y_periodic) + "-disorder"
-        + std::to_string(disorder) + ".dat"};
+        + std::to_string(disorder) + "-LL.dat"};
 
     Timer t;
-    Simulation::dos(hamiltonian, static_cast<long>(std::pow(2, 14)), path);
+    // Simulation::dos(hamiltonian, 1024, path);
+    Simulation::ldos(hamiltonian, -3.86, 0.0005, path);
     std::cout << "Time elapsed: " << t.elapsed() << " seconds\n";
 
     // Timer t;
@@ -55,15 +57,7 @@ int main() {
     // }
 }
 
-// Fazer estudo da convergência da aproximação à gaussiana para termos fórmula empírica fiável
-// Ver output do henrique
 // Meter constantes configuráveis num ficheiro para trocar facilmente
 
-// Ver campos magnéticos mais fracos para aproximar resultados do contínuos
-// Ver como isto evolui com o número de polinómios. Reduzir sigma e ir aumentando número de polinómios.
 // Variação média quadrática do potencial no espaço todo da ideia da desordem.
-// Outra incerteza tem a ver com a resolução
-// Ver para cada sigma que aquilo converge com o número de polinómios. Depois temos de variar os sigmas
-// Ver se somar LDOS dá DOS
-// Podemos também calcular com o cálculo não estocástico
 // Função espectral: Elemento de matriz do delta no espaço dos k
